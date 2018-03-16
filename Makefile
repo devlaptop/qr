@@ -13,11 +13,11 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-CC ?= gcc
+CC ?= g++
 PREFIX ?= /usr/local
 SDL_CFLAGS != pkg-config --cflags sdl
-SDL_LIBS != pkg-config --libs sdl
-
+#SDL_LIBS != pkg-config --libs sdl
+SDL_LIBS = -L/usr/local/lib -lSDLmain -lSDL -Wl,-framework,Cocoa
 LIB_VERSION = 1.0
 
 CFLAGS ?= -O3 -Wall -fPIC
@@ -34,7 +34,8 @@ DEMO_OBJ = \
     demo/dthash.o \
     demo/demoutil.o
 
-all: libquirc.so qrtest inspect quirc-demo quirc-scanner
+#all: libquirc.so qrtest inspect quirc-demo quirc-scanner
+all: libquirc.so qrtest inspect  
 
 qrtest: tests/dbgutil.o tests/qrtest.o libquirc.a
 	$(CC) -o $@ tests/dbgutil.o tests/qrtest.o libquirc.a $(LDFLAGS) -lm -ljpeg -lpng

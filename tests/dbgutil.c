@@ -39,28 +39,31 @@ static const char *data_type_str(int dt)
 
 void dump_data(const struct quirc_data *data)
 {
-	printf("    Version: %d\n", data->version);
-	printf("    ECC level: %c\n", "MLHQ"[data->ecc_level]);
-	printf("    Mask: %d\n", data->mask);
-	printf("    Data type: %d (%s)\n",
-	    data->data_type, data_type_str(data->data_type));
-	printf("    Length: %d\n", data->payload_len);
-	printf("    Payload: %s\n", data->payload);
+	//printf("    Version: %d\n", data->version);
+	//printf("    ECC level: %c\n", "MLHQ"[data->ecc_level]);
+	//printf("    Mask: %d\n", data->mask);
+	//printf("    Data type: %d (%s)\n",
+	    //data->data_type, data_type_str(data->data_type));
+	//printf("    Length: %d\n", data->payload_len);
+	printf("    ],\"payload\": \"%s\"}\n", data->payload);
 
-	if (data->eci)
-		printf("    ECI: %d\n", data->eci);
+	//if (data->eci)
+		//printf("    ECI: %d\n", data->eci);
 }
 
 void dump_cells(const struct quirc_code *code)
 {
 	int u, v;
 
-	printf("    %d cells, corners:", code->size);
-	for (u = 0; u < 4; u++)
-		printf(" (%d,%d)", code->corners[u].x,
+	//printf("    %d cells, \"corners\":", code->size);
+	printf("{\"corners\":[");
+	for (u = 0; u < 4; u++){
+		printf("{\"lat\":%d,\"lng\":%d}", code->corners[u].x,
 				   code->corners[u].y);
-	printf("\n");
-
+		if(u<3)printf(",");
+	}
+	//printf("\n");
+/*
 	for (v = 0; v < code->size; v++) {
 		printf("    ");
 		for (u = 0; u < code->size; u++) {
@@ -72,7 +75,7 @@ void dump_cells(const struct quirc_code *code)
 				printf("  ");
 		}
 		printf("\n");
-	}
+	}*/
 }
 
 struct my_jpeg_error {

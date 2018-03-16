@@ -16,8 +16,8 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <SDL.h>
-#include <SDL_gfxPrimitives.h>
+#include "/usr/local/include/SDL/SDL.h"
+#include "/usr/local/include/SDL/SDL_gfxPrimitives.h"
 #include "quirc_internal.h"
 #include "dbgutil.h"
 
@@ -26,7 +26,8 @@ static void dump_info(struct quirc *q)
 	int count = quirc_count(q);
 	int i;
 
-	printf("%d QR-codes found:\n\n", count);
+	//printf("%d QR-codes found:\n\n", count);
+	printf("{\"QR\":{ \"qrcodes\":[\n");
 	for (i = 0; i < count; i++) {
 		struct quirc_code code;
 		struct quirc_data data;
@@ -36,17 +37,18 @@ static void dump_info(struct quirc *q)
 		err = quirc_decode(&code, &data);
 
 		dump_cells(&code);
-		printf("\n");
+		//printf("\n");
 
 		if (err) {
-			printf("  Decoding FAILED: %s\n", quirc_strerror(err));
+			//printf("  Decoding FAILED: %s\n", quirc_strerror(err));
+			printf(" ] , \"payload\":\"\"}");
 		} else {
-			printf("  Decoding successful:\n");
 			dump_data(&data);
 		}
 
-		printf("\n");
+		if(i<(count-1)){printf(",\n");} else {printf("\n");}
 	}
+		printf("]}}\n");
 }
 
 static void draw_frame(SDL_Surface *screen, struct quirc *q)
@@ -220,10 +222,10 @@ int main(int argc, char **argv)
 {
 	struct quirc *q;
 
-	printf("quirc inspection program\n");
-	printf("Copyright (C) 2010-2012 Daniel Beer <dlbeer@gmail.com>\n");
-	printf("Library version: %s\n", quirc_version());
-	printf("\n");
+	//printf("quirc inspection program\n");
+	//printf("Copyright (C) 2010-2012 Daniel Beer <dlbeer@gmail.com>\n");
+	//printf("Library version: %s\n", quirc_version());
+	//printf("\n");
 
 	if (argc < 2) {
 		fprintf(stderr, "Usage: %s <testfile.jpg|testfile.png>\n", argv[0]);
@@ -250,10 +252,10 @@ int main(int argc, char **argv)
 	quirc_end(q);
 	dump_info(q);
 
-	if (sdl_examine(q) < 0) {
-		quirc_destroy(q);
-		return -1;
-	}
+	//if (sdl_examine(q) < 0) {
+	//	quirc_destroy(q);
+	//	return -1;
+	//}
 
 	quirc_destroy(q);
 	return 0;
